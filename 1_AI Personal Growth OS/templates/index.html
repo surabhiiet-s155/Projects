@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Growth OS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="card p-5 shadow">
+        <h1 class="text-center text-primary">
+            AI Personal Growth OS
+        </h1>
+        <form action="/dashboard" method="POST">
+            <input
+                type="text"
+                name="name"
+                class="form-control mt-4"
+                placeholder="Enter Name"
+                required>
+            <select
+                name="goal"
+                class="form-control mt-4"
+                required>
+                <option value="">
+                    Select Career Goal
+                </option>
+                <option value="full stack developer">
+                    Full Stack Developer
+                </option>
+
+                <option value="python developer">
+                    Python Developer
+                </option>
+                <option value="data analyst">
+                    Data Analyst
+                </option>
+            </select>
+            <textarea
+                name="skills"
+                class="form-control mt-4"
+                rows="5"
+                placeholder="Enter your skills..."
+                required>
+            </textarea>
+            <button class="btn btn-primary mt-4 w-100">
+                Analyze Growth
+            </button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
