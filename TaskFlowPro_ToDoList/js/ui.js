@@ -2,7 +2,6 @@
  * TaskFlow Pro - UI Rendering Engine
  * Renders views (List, Kanban, Matrix, Calendar) and handles DOM interactions.
  */
-
 class UIRenderer {
     constructor(taskManager) {
         this.taskManager = taskManager;
