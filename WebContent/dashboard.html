@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Placement Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h2>Student Dashboard</h2>
+    <nav><a href="index.html">Home</a></nav>
+</header>
+
+<section class="hero">
+
+    <h1>Placement Opportunities</h1>
+
+    <p>Enter your academic details to check eligibility.</p>
+
+    <form id="placementForm">
+
+        <input
+            type="number"
+            id="cgpa"
+            placeholder="Enter CGPA (0–10)"
+            min="0"
+            max="10"
+            step="0.01"
+            required
+        >
+
+        <br><br>
+
+        <input
+            type="number"
+            id="backlogs"
+            placeholder="Number of backlogs"
+            min="0"
+            step="1"
+            required
+        >
+
+        <br><br>
+
+        <button class="btn" type="submit">
+            Check Eligibility
+        </button>
+
+    </form>
+
+    <div id="result" style="margin-top: 30px;"></div>
+
+</section>
+
+<script>
+    const companies = [
+        { name: "Infosys", cgpa: 6.0, backlogs: 0 },
+        { name: "TCS", cgpa: 6.5, backlogs: 0 },
+        { name: "Wipro", cgpa: 6.0, backlogs: 1 },
+        { name: "Accenture", cgpa: 6.5, backlogs: 0 }
+    ];
+
+    document.getElementById("placementForm")
+        .addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            const cgpa = Number(document.getElementById("cgpa").value);
+            const backlogs = Number(
+                document.getElementById("backlogs").value
+            );
+
+            if (
+                !Number.isFinite(cgpa) ||
+                cgpa < 0 ||
+                cgpa > 10 ||
+                !Number.isInteger(backlogs) ||
+                backlogs < 0
+            ) {
+                document.getElementById("result").textContent =
+                    "Please enter valid academic details.";
+                return;
+            }
+
+            const eligible = companies.filter(company =>
+                cgpa >= company.cgpa &&
+                backlogs <= company.backlogs
+            );
+
+            const result = document.getElementById("result");
+            result.replaceChildren();
+
+            const heading = document.createElement("h2");
+            heading.textContent = "Your Matching Companies";
+            result.appendChild(heading);
+
+            if (eligible.length === 0) {
+                const message = document.createElement("p");
+                message.textContent =
+                    "No matching companies found for these sample criteria.";
+                result.appendChild(message);
+                return;
+            }
+
+            eligible.forEach(company => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.style.margin = "15px auto";
+
+                const name = document.createElement("h3");
+                name.textContent = company.name;
+
+                const criteria = document.createElement("p");
+                criteria.textContent =
+                    "Minimum CGPA: " + company.cgpa +
+                    " | Maximum backlogs: " + company.backlogs;
+
+                card.append(name, criteria);
+                result.appendChild(card);
+            });
+        });
+</script>
+
+</body>
+</html>
