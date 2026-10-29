@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow Pro | Advanced Task & Productivity Suite</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Third Party JS Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-check-double logo-icon"></i>
+                    <span class="logo-text">TaskFlow <span class="badge-pro">PRO</span></span>
+                </div>
+                <button class="icon-btn mobile-close-btn" id="closeSidebarBtn" aria-label="Close Sidebar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Quick Action Button -->
+            <div class="sidebar-action">
+                <button class="btn btn-primary btn-block" id="sidebarAddBtn">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>New Task</span>
+                    <kbd class="shortcut-key">N</kbd>
+                </button>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Views</div>
+                    <ul class="nav-list">
+                        <li class="nav-item active" data-view="all">
+                            <a href="#" class="nav-link">
+                                <i class="fa-solid fa-inbox"></i>
+                                <span>All Tasks</span>
+                                <span class="count-badge" id="countAll">0</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" data-view="today">
+                            <a href="#" class="nav-link">
+                                <i class="fa-solid fa-star text-warning"></i>
+                                <span>Today</span>
+                                <span class="count-badge" id="countToday">0</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" data-view="upcoming">
+                            <a href="#" class="nav-link">
+                                <i class="fa-solid fa-calendar-days text-info"></i>
+                                <span>Upcoming</span>
+                                <span class="count-badge" id="countUpcoming">0</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" data-view="kanban">
+                            <a href="#" class="nav-link">
+                                <i class="fa-solid fa-grip-vertical"></i>
+                                <span>Kanban Board</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" data-view="matrix">
+                            <a href="#" class="nav-link">
+                                <i class="fa-solid fa-table-cells-large"></i>
+                                <span>Eisenhower Matrix</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" data-view="calendar">
+                            <a href="#" class="nav-link">
+                                <i class="fa-solid fa-calendar-month"></i>
+                                <span>Calendar</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Productivity</div>
+                    <ul class="nav-list">
+                        <li class="nav-item" data-view="pomodoro">
+                            <a href="#" class="nav-link">
+                                <i class="fa-solid fa-stopwatch text-danger"></i>
+                                <span>Focus Timer</span>
+                                <span class="active-timer-dot hidden" id="timerDot"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item" data-view="analytics">
+                            <a href="#" class="nav-link">
+                                <i class="fa-solid fa-chart-pie text-success"></i>
+                                <span>Analytics</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title flex-between">
+                        <span>Categories</span>
+                        <button class="icon-btn-sm" id="addCategoryBtn" title="Add Category">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                    <ul class="nav-list" id="categoryNavList">
+                        <!-- Dynamic Categories populated via JS -->
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Sidebar Footer Stats -->
+            <div class="sidebar-footer">
+                <div class="streak-card">
+                    <div class="streak-icon"><i class="fa-solid fa-fire text-warning"></i></div>
+                    <div class="streak-info">
+                        <span class="streak-value" id="streakDays">0 Days</span>
+                        <span class="streak-label">Productivity Streak</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay for mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Header Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="icon-btn mobile-menu-btn" id="toggleSidebarBtn" aria-label="Toggle Navigation">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="page-title-container">
+                        <h1 class="page-title" id="pageTitle">All Tasks</h1>
+                        <span class="page-subtitle" id="pageSubtitle">Manage and organize your daily work</span>
+                    </div>
+                </div>
+
+                <!-- Search & Actions Top Bar -->
+                <div class="topbar-center">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="searchInput" placeholder="Search tasks or commands (Press '/' to focus)">
+                        <button class="clear-search-btn hidden" id="clearSearchBtn">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <!-- Voice Command Button -->
+                    <button class="icon-btn tool-btn" id="voiceInputBtn" title="Voice Input (Speech to Task)">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+
+                    <!-- Command Palette Button -->
+                    <button class="icon-btn tool-btn" id="cmdPaletteBtn" title="Command Palette (Ctrl + K)">
+                        <i class="fa-solid fa-terminal"></i>
+                    </button>
+
+                    <!-- Sound Toggle -->
+                    <button class="icon-btn tool-btn" id="soundToggleBtn" title="Toggle Sound Effects">
+                        <i class="fa-solid fa-volume-high" id="soundIcon"></i>
+                    </button>
+
+                    <!-- Theme Selector Menu -->
+                    <div class="dropdown">
+                        <button class="icon-btn tool-btn" id="themeMenuBtn" title="Change Theme">
+                            <i class="fa-solid fa-palette"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-right" id="themeDropdown">
+                            <div class="dropdown-header">Select Theme</div>
+                            <button class="dropdown-item" data-theme="dark">
+                                <i class="fa-solid fa-moon"></i> Dark Neon
+                            </button>
+                            <button class="dropdown-item" data-theme="light">
+                                <i class="fa-solid fa-sun"></i> Light Clean
+                            </button>
+                            <button class="dropdown-item" data-theme="cyberpunk">
+                                <i class="fa-solid fa-bolt text-warning"></i> Cyberpunk
+                            </button>
+                            <button class="dropdown-item" data-theme="forest">
+                                <i class="fa-solid fa-tree text-success"></i> Emerald Forest
+                            </button>
+                            <button class="dropdown-item" data-theme="sunset">
+                                <i class="fa-solid fa-sunset text-danger"></i> Sunset Glow
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Options / Settings -->
+                    <div class="dropdown">
+                        <button class="icon-btn tool-btn" id="settingsDropdownBtn" title="Settings & Data">
+                            <i class="fa-solid fa-gear"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-right" id="settingsDropdown">
+                            <div class="dropdown-header">Data Management</div>
+                            <button class="dropdown-item" id="exportDataBtn">
+                                <i class="fa-solid fa-file-export"></i> Export Data (JSON)
+                            </button>
+                            <button class="dropdown-item" id="importDataBtn">
+                                <i class="fa-solid fa-file-import"></i> Import Data
+                            </button>
+                            <button class="dropdown-item" id="loadDemoDataBtn">
+                                <i class="fa-solid fa-wand-magic-sparkles text-accent"></i> Load Demo Tasks
+                            </button>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item text-danger" id="clearAllDataBtn">
+                                <i class="fa-solid fa-trash-can"></i> Clear All Tasks
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Container -->
+            <div class="content-body" id="contentBody">
+                
+                <!-- QUICK ADD INPUT BAR -->
+                <div class="quick-add-card" id="quickAddCard">
+                    <div class="quick-add-input-wrapper">
+                        <i class="fa-solid fa-circle-plus quick-add-icon"></i>
+                        <input type="text" id="quickAddInput" placeholder="Add a task (e.g. Finish report tomorrow at 5pm !high #work)... Press Enter">
+                        <div class="quick-add-actions">
+                            <select id="quickPriority" class="select-sm" title="Select Priority">
+                                <option value="low">Low Priority</option>
+                                <option value="medium" selected>Med Priority</option>
+                                <option value="high">High Priority</option>
+                                <option value="urgent">Urgent</option>
+                            </select>
+                            <input type="date" id="quickDueDate" class="input-sm" title="Due Date">
+                            <button class="btn btn-primary btn-sm" id="quickAddSubmitBtn">Add Task</button>
+                        </div>
+                    </div>
+                    <div class="quick-add-hint">
+                        <span><i class="fa-solid fa-lightbulb text-warning"></i> Pro-tip: Use <strong>!high</strong>, <strong>#category</strong>, or click details for subtasks.</span>
+                    </div>
+                </div>
+
+                <!-- FILTER AND SORT CONTROL BAR -->
+                <div class="toolbar" id="mainToolbar">
+                    <div class="toolbar-left">
+                        <div class="filter-tabs" id="statusFilterTabs">
+                            <button class="tab-btn active" data-status="all">All</button>
+                            <button class="tab-btn" data-status="active">Active</button>
+                            <button class="tab-btn" data-status="completed">Completed</button>
+                            <button class="tab-btn" data-status="overdue">Overdue</button>
+                        </div>
+                    </div>
+
+                    <div class="toolbar-right">
+                        <!-- Multi-select / Batch Actions trigger -->
+                        <button class="btn btn-secondary btn-sm hidden" id="batchActionsBtn">
+                            <i class="fa-solid fa-list-check"></i> Bulk Actions (<span id="batchCount">0</span>)
+                        </button>
+
+                        <div class="sort-wrapper">
+                            <label for="sortSelect" class="sort-label"><i class="fa-solid fa-arrow-down-short-wide"></i> Sort:</label>
+                            <select id="sortSelect" class="select-sm">
+                                <option value="createdAt-desc">Newest First</option>
+                                <option value="dueDate-asc">Due Date (Earliest)</option>
+                                <option value="priority-desc">Priority (High to Low)</option>
+                                <option value="title-asc">Title (A-Z)</option>
+                            </select>
+                        </div>
+
+                        <!-- View Selector Switcher -->
+                        <div class="view-mode-toggle">
+                            <button class="view-toggle-btn active" data-mode="list" title="List View">
+                                <i class="fa-solid fa-list"></i>
+                            </button>
+                            <button class="view-toggle-btn" data-mode="grid" title="Grid Cards View">
+                                <i class="fa-solid fa-border-all"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 1: LIST / GRID VIEW (Default) -->
+                <div class="view-container active" id="listViewContainer">
+                    <div class="task-list" id="taskList">
+                        <!-- Rendered dynamically -->
+                    </div>
+                    <!-- Empty State -->
+                    <div class="empty-state hidden" id="emptyState">
+                        <div class="empty-illustration">
+                            <i class="fa-solid fa-clipboard-check"></i>
+                        </div>
+                        <h3 class="empty-title">All Done! No tasks found</h3>
+                        <p class="empty-desc">Take a break, or add a new task using the input above.</p>
+                        <button class="btn btn-primary" id="emptyStateAddBtn">Create Task</button>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: KANBAN BOARD VIEW -->
+                <div class="view-container hidden" id="kanbanViewContainer">
+                    <div class="kanban-board">
+                        <!-- Todo Column -->
+                        <div class="kanban-column" data-kanban-status="todo">
+                            <div class="kanban-header column-todo">
+                                <span><i class="fa-regular fa-circle"></i> To Do</span>
+                                <span class="kanban-count" id="countKanbanTodo">0</span>
+                            </div>
+                            <div class="kanban-list" id="kanbanTodo"></div>
+                        </div>
+                        <!-- In Progress Column -->
+                        <div class="kanban-column" data-kanban-status="in-progress">
+                            <div class="kanban-header column-progress">
+                                <span><i class="fa-solid fa-spinner fa-spin-pulse"></i> In Progress</span>
+                                <span class="kanban-count" id="countKanbanProgress">0</span>
+                            </div>
+                            <div class="kanban-list" id="kanbanProgress"></div>
+                        </div>
+                        <!-- Completed Column -->
+                        <div class="kanban-column" data-kanban-status="completed">
+                            <div class="kanban-header column-done">
+                                <span><i class="fa-solid fa-circle-check"></i> Done</span>
+                                <span class="kanban-count" id="countKanbanDone">0</span>
+                            </div>
+                            <div class="kanban-list" id="kanbanDone"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 3: EISENHOWER MATRIX VIEW -->
+                <div class="view-container hidden" id="matrixViewContainer">
+                    <div class="matrix-grid">
+                        <!-- Q1: Urgent & Important -->
+                        <div class="matrix-quadrant q1" data-quadrant="q1">
+                            <div class="quadrant-header">
+                                <div>
+                                    <span class="quadrant-badge badge-q1">DO FIRST</span>
+                                    <h3>Urgent & Important</h3>
+                                </div>
+                                <span class="quadrant-count" id="countQ1">0</span>
+                            </div>
+                            <div class="matrix-task-list" id="matrixQ1"></div>
+                        </div>
+                        <!-- Q2: Not Urgent & Important -->
+                        <div class="matrix-quadrant q2" data-quadrant="q2">
+                            <div class="quadrant-header">
+                                <div>
+                                    <span class="quadrant-badge badge-q2">SCHEDULE</span>
+                                    <h3>Not Urgent & Important</h3>
+                                </div>
+                                <span class="quadrant-count" id="countQ2">0</span>
+                            </div>
+                            <div class="matrix-task-list" id="matrixQ2"></div>
+                        </div>
+                        <!-- Q3: Urgent & Not Important -->
+                        <div class="matrix-quadrant q3" data-quadrant="q3">
+                            <div class="quadrant-header">
+                                <div>
+                                    <span class="quadrant-badge badge-q3">DELEGATE</span>
+                                    <h3>Urgent & Not Important</h3>
+                                </div>
+                                <span class="quadrant-count" id="countQ3">0</span>
+                            </div>
+                            <div class="matrix-task-list" id="matrixQ3"></div>
+                        </div>
+                        <!-- Q4: Not Urgent & Not Important -->
+                        <div class="matrix-quadrant q4" data-quadrant="q4">
+                            <div class="quadrant-header">
+                                <div>
+                                    <span class="quadrant-badge badge-q4">ELIMINATE</span>
+                                    <h3>Not Urgent & Not Important</h3>
+                                </div>
+                                <span class="quadrant-count" id="countQ4">0</span>
+                            </div>
+                            <div class="matrix-task-list" id="matrixQ4"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 4: CALENDAR VIEW -->
+                <div class="view-container hidden" id="calendarViewContainer">
+                    <div class="calendar-wrapper">
+                        <div class="calendar-header">
+                            <div class="calendar-nav">
+                                <button class="icon-btn" id="calPrevMonthBtn"><i class="fa-solid fa-chevron-left"></i></button>
+                                <h2 class="calendar-title" id="calMonthYearText">September 2026</h2>
+                                <button class="icon-btn" id="calNextMonthBtn"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                            <button class="btn btn-secondary btn-sm" id="calTodayBtn">Today</button>
+                        </div>
+                        <div class="calendar-days-header">
+                            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                        </div>
+                        <div class="calendar-grid" id="calendarGrid"></div>
+                    </div>
+                </div>
+
+                <!-- VIEW 5: POMODORO FOCUS TIMER VIEW -->
+                <div class="view-container hidden" id="pomodoroViewContainer">
+                    <div class="pomodoro-card">
+                        <div class="pomo-mode-selector">
+                            <button class="pomo-mode-btn active" data-pomo-mode="work">Focus (25m)</button>
+                            <button class="pomo-mode-btn" data-pomo-mode="shortBreak">Short Break (5m)</button>
+                            <button class="pomo-mode-btn" data-pomo-mode="longBreak">Long Break (15m)</button>
+                        </div>
+
+                        <div class="pomo-timer-display">
+                            <svg class="pomo-progress-svg" viewBox="0 0 100 100">
+                                <circle class="pomo-circle-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="pomo-circle-progress" id="pomoProgressCircle" cx="50" cy="50" r="45"></circle>
+                            </svg>
+                            <div class="pomo-time-text" id="pomoTimeDisplay">25:00</div>
+                            <div class="pomo-current-task-name" id="pomoActiveTaskName">Select a task to link focus</div>
+                        </div>
+
+                        <div class="pomo-controls">
+                            <button class="btn btn-lg btn-primary" id="pomoStartBtn">
+                                <i class="fa-solid fa-play"></i> Start
+                            </button>
+                            <button class="btn btn-lg btn-secondary hidden" id="pomoPauseBtn">
+                                <i class="fa-solid fa-pause"></i> Pause
+                            </button>
+                            <button class="btn btn-lg btn-secondary" id="pomoResetBtn">
+                                <i class="fa-solid fa-rotate-left"></i> Reset
+                            </button>
+                        </div>
+
+                        <div class="pomo-task-selector">
+                            <label for="pomoTaskSelect"><i class="fa-solid fa-link"></i> Link Focus to Task:</label>
+                            <select id="pomoTaskSelect" class="select-md">
+                                <option value="">-- Unlinked General Session --</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 6: ANALYTICS & STATS VIEW -->
+                <div class="view-container hidden" id="analyticsViewContainer">
+                    <div class="analytics-grid">
+                        <!-- Stats Overview Cards -->
+                        <div class="stat-card">
+                            <div class="stat-icon bg-primary-subtle text-primary"><i class="fa-solid fa-list-check"></i></div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="statTotalCreated">0</span>
+                                <span class="stat-label">Total Tasks Created</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-success-subtle text-success"><i class="fa-solid fa-circle-check"></i></div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="statTotalCompleted">0</span>
+                                <span class="stat-label">Tasks Completed</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-warning-subtle text-warning"><i class="fa-solid fa-percent"></i></div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="statCompletionRate">0%</span>
+                                <span class="stat-label">Completion Rate</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-info-subtle text-info"><i class="fa-solid fa-clock"></i></div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="statFocusTime">0 hrs</span>
+                                <span class="stat-label">Total Focus Time</span>
+                            </div>
+                        </div>
+
+                        <!-- Charts Section -->
+                        <div class="chart-card chart-wide">
+                            <h3 class="chart-title">Weekly Task Activity</h3>
+                            <div class="chart-container">
+                                <canvas id="activityChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <h3 class="chart-title">Tasks by Priority</h3>
+                            <div class="chart-container">
+                                <canvas id="priorityChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <h3 class="chart-title">Category Distribution</h3>
+                            <div class="chart-container">
+                                <canvas id="categoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL 1: TASK EDIT / CREATE MODAL -->
+    <div class="modal-backdrop hidden" id="taskModalBackdrop">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title" id="taskModalTitle">Task Details</h3>
+                <button class="icon-btn" id="closeTaskModalBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="taskForm" class="modal-body">
+                <input type="hidden" id="modalTaskId">
+
+                <div class="form-group">
+                    <label for="modalTaskTitle" class="form-label">Task Title <span class="text-danger">*</span></label>
+                    <input type="text" id="modalTaskTitle" class="form-input" placeholder="What needs to be done?" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="modalTaskDesc" class="form-label">Description / Notes</label>
+                    <textarea id="modalTaskDesc" class="form-textarea" rows="3" placeholder="Add additional details, links, or context..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label for="modalTaskPriority" class="form-label">Priority</label>
+                        <select id="modalTaskPriority" class="form-select">
+                            <option value="low">🟢 Low</option>
+                            <option value="medium" selected>🟡 Medium</option>
+                            <option value="high">🟠 High</option>
+                            <option value="urgent">🔴 Urgent</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label for="modalTaskCategory" class="form-label">Category</label>
+                        <select id="modalTaskCategory" class="form-select">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label for="modalTaskDueDate" class="form-label">Due Date</label>
+                        <input type="date" id="modalTaskDueDate" class="form-input">
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label for="modalTaskRecurrence" class="form-label">Repeat Task</label>
+                        <select id="modalTaskRecurrence" class="form-select">
+                            <option value="none">Does not repeat</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- SUBTASKS CHECKLIST -->
+                <div class="form-group">
+                    <div class="flex-between mb-2">
+                        <label class="form-label mb-0">Subtasks / Checklist</label>
+                        <span class="subtask-progress-text" id="modalSubtaskProgressText">0 / 0</span>
+                    </div>
+                    
+                    <div class="subtasks-container" id="modalSubtasksList">
+                        <!-- Dynamic subtask rows -->
+                    </div>
+
+                    <div class="subtask-input-wrapper mt-2">
+                        <input type="text" id="newSubtaskInput" class="form-input input-sm" placeholder="Add subtask and press Enter...">
+                        <button type="button" class="btn btn-secondary btn-sm" id="addSubtaskBtn">Add</button>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelTaskModalBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveTaskModalBtn">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: COMMAND PALETTE -->
+    <div class="modal-backdrop hidden" id="cmdPaletteBackdrop">
+        <div class="cmd-palette-card">
+            <div class="cmd-palette-input-wrapper">
+                <i class="fa-solid fa-terminal cmd-palette-icon"></i>
+                <input type="text" id="cmdPaletteInput" placeholder="Type a command or search tasks..." autocomplete="off">
+            </div>
+            <div class="cmd-palette-results" id="cmdPaletteResults">
+                <!-- Results generated via JS -->
+            </div>
+            <div class="cmd-palette-footer">
+                <span><kbd>↑</kbd> <kbd>↓</kbd> to navigate</span>
+                <span><kbd>↵</kbd> to select</span>
+                <span><kbd>ESC</kbd> to exit</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: VOICE INPUT OVERLAY -->
+    <div class="modal-backdrop hidden" id="voiceModalBackdrop">
+        <div class="voice-modal-card">
+            <div class="pulse-ring">
+                <i class="fa-solid fa-microphone voice-pulse-icon"></i>
+            </div>
+            <h3 class="voice-title">Listening...</h3>
+            <p class="voice-status" id="voiceTranscript">Say a task title like "Submit report by tomorrow"</p>
+            <button class="btn btn-secondary mt-3" id="stopVoiceBtn">Cancel Voice Input</button>
+        </div>
+    </div>
+
+    <!-- MODAL 4: KEYBOARD SHORTCUTS CHEAT SHEET -->
+    <div class="modal-backdrop hidden" id="shortcutsModalBackdrop">
+        <div class="modal-card modal-md">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-keyboard"></i> Keyboard Shortcuts</h3>
+                <button class="icon-btn" id="closeShortcutsModalBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="shortcuts-grid">
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Create New Task</span>
+                        <kbd class="shortcut-keys">N</kbd>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Focus Search Bar</span>
+                        <kbd class="shortcut-keys">/</kbd>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Command Palette</span>
+                        <kbd class="shortcut-keys">Ctrl + K</kbd>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Toggle Dark / Light Theme</span>
+                        <kbd class="shortcut-keys">D</kbd>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Show Shortcuts Help</span>
+                        <kbd class="shortcut-keys">?</kbd>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Close Modal / Overlay</span>
+                        <kbd class="shortcut-keys">ESC</kbd>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: CATEGORY MANAGER -->
+    <div class="modal-backdrop hidden" id="categoryModalBackdrop">
+        <div class="modal-card modal-sm">
+            <div class="modal-header">
+                <h3 class="modal-title">New Category</h3>
+                <button class="icon-btn" id="closeCategoryModalBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="categoryForm" class="modal-body">
+                <div class="form-group">
+                    <label for="catNameInput" class="form-label">Category Name</label>
+                    <input type="text" id="catNameInput" class="form-input" placeholder="e.g. Health, Design, Finance..." required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Color Theme</label>
+                    <div class="color-picker-grid" id="catColorGrid">
+                        <button type="button" class="color-dot active" data-color="#6366f1" style="background: #6366f1;"></button>
+                        <button type="button" class="color-dot" data-color="#ec4899" style="background: #ec4899;"></button>
+                        <button type="button" class="color-dot" data-color="#10b981" style="background: #10b981;"></button>
+                        <button type="button" class="color-dot" data-color="#f59e0b" style="background: #f59e0b;"></button>
+                        <button type="button" class="color-dot" data-color="#8b5cf6" style="background: #8b5cf6;"></button>
+                        <button type="button" class="color-dot" data-color="#06b6d4" style="background: #06b6d4;"></button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelCategoryModalBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hidden File Input for Data Import -->
+    <input type="file" id="importFileInput" accept=".json" class="hidden">
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- App JavaScript Modules -->
+    <script src="js/storage.js"></script>
+    <script src="js/taskManager.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/voice.js"></script>
+    <script src="js/commandPalette.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

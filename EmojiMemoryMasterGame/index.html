@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emoji Memory Master - 20 Level Campaign</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Game Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dark-mode">
+  <!-- Interactive Particle Background Canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="app-wrapper">
+
+    <!-- ===================================================================
+         VIEW 1: LANDING / HOME VIEW (ULTRA ANIMATED)
+         =================================================================== -->
+    <div id="home-view" class="view active">
+      <!-- Floating Background Emoji Orbs -->
+      <div class="floating-orbs-container" id="orbs-container"></div>
+
+      <!-- Top Navigation Header -->
+      <header class="home-header">
+        <div class="logo-container">
+          <span class="logo-emoji">🧠</span>
+          <div>
+            <h1 class="logo-title">Emoji <span class="gradient-text rainbow-text">Memory</span></h1>
+            <p class="logo-subtitle">20-Level Mind Campaign</p>
+          </div>
+        </div>
+
+        <div class="header-controls">
+          <button id="home-dark-light-toggle" class="btn-icon" title="Toggle Light / Dark Mode">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <button id="home-sound-btn" class="btn-icon" title="Toggle Sound">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+          <button id="home-help-btn" class="btn-icon" title="How to Play">
+            <i class="fa-solid fa-circle-question"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Hero Section with Glowing Border Sweep -->
+      <section class="hero-section glow-border-card">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="pulse-dot"></span> 20 UNIQUE CAMPAIGN LEVELS
+          </div>
+          <h1 class="hero-headline">Train Your Brain With <span class="gradient-text rainbow-text">Emoji Master</span></h1>
+          <p class="hero-description">
+            Experience 20 handcrafted memory levels packed with Wildcards 🃏, Freeze Time 🧊, Bomb Traps 💣, and mid-game Board Shuffle hazards!
+          </p>
+
+          <div class="hero-ctas">
+            <button id="start-campaign-btn" class="btn btn-primary btn-hero btn-pulse">
+              <i class="fa-solid fa-play"></i> Start Campaign (Level 1)
+            </button>
+            <button id="scroll-levels-btn" class="btn btn-secondary btn-hero">
+              <i class="fa-solid fa-map-location-dot"></i> Explore 20 Levels
+            </button>
+          </div>
+        </div>
+
+        <!-- 3D Interactive Card Showcase Reel -->
+        <div class="hero-showcase" id="hero-tilt-card">
+          <div class="showcase-card showcase-card-1">
+            <div class="sc-face">🦄</div>
+          </div>
+          <div class="showcase-card showcase-card-2">
+            <div class="sc-face">🃏</div>
+            <span class="sc-label">WILDCARD</span>
+          </div>
+          <div class="showcase-card showcase-card-3">
+            <div class="sc-face">🧊</div>
+            <span class="sc-label">FREEZE</span>
+          </div>
+          <div class="showcase-card showcase-card-4">
+            <div class="sc-face">💣</div>
+            <span class="sc-label">BOMB TRAP</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats Quick Overview -->
+      <section class="home-stats-banner">
+        <div class="h-stat-item animated-card">
+          <i class="fa-solid fa-trophy h-stat-icon"></i>
+          <div>
+            <span id="home-total-stars" class="h-stat-val">0 / 60</span>
+            <span class="h-stat-lbl">Stars Collected</span>
+          </div>
+        </div>
+        <div class="h-stat-item animated-card">
+          <i class="fa-solid fa-unlock-keyhole h-stat-icon"></i>
+          <div>
+            <span id="home-unlocked-count" class="h-stat-val">1 / 20</span>
+            <span class="h-stat-lbl">Levels Unlocked</span>
+          </div>
+        </div>
+        <div class="h-stat-item animated-card">
+          <i class="fa-solid fa-fire h-stat-icon"></i>
+          <div>
+            <span id="home-best-streak" class="h-stat-val">0x</span>
+            <span class="h-stat-lbl">Max Combo Streak</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Level Pack / Theme Selector -->
+      <section class="pack-selector-section glow-border-card">
+        <h2 class="section-title"><i class="fa-solid fa-layer-group"></i> Choose Emoji Card Pack</h2>
+        <div class="pack-grid">
+          <div class="pack-card active" data-pack="animals">
+            <span class="pack-emoji">🐶</span>
+            <div class="pack-info">
+              <h3>Animals & Pets</h3>
+              <p>Cute dogs, lions, pandas & unicorns</p>
+            </div>
+          </div>
+          <div class="pack-card" data-pack="food">
+            <span class="pack-emoji">🍕</span>
+            <div class="pack-info">
+              <h3>Food & Treats</h3>
+              <p>Pizzas, burgers, ice creams & tacos</p>
+            </div>
+          </div>
+          <div class="pack-card" data-pack="scifi">
+            <span class="pack-emoji">🚀</span>
+            <div class="pack-info">
+              <h3>Space & Sci-Fi</h3>
+              <p>Rockets, aliens, robots & planets</p>
+            </div>
+          </div>
+          <div class="pack-card" data-pack="emotions">
+            <span class="pack-emoji">🤩</span>
+            <div class="pack-info">
+              <h3>Fun Expressions</h3>
+              <p>Cool, party, ghost & shock emojis</p>
+            </div>
+          </div>
+          <div class="pack-card" data-pack="sports">
+            <span class="pack-emoji">⚽</span>
+            <div class="pack-info">
+              <h3>Sports & Fun</h3>
+              <p>Soccer, gaming, trophies & racing</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 20 Level Campaign Map Section -->
+      <section id="campaign-map-section" class="campaign-map-section glow-border-card">
+        <div class="section-header-row">
+          <div>
+            <h2 class="section-title"><i class="fa-solid fa-map-location-dot"></i> 20-Level Campaign Map</h2>
+            <p class="section-subtitle">Click any unlocked level node to jump straight into action!</p>
+          </div>
+          <div class="tier-legend-inline">
+            <span class="legend-chip easy"><span class="chip-dot"></span> Easy (1-5)</span>
+            <span class="legend-chip medium"><span class="chip-dot"></span> Medium (6-10)</span>
+            <span class="legend-chip hard"><span class="chip-dot"></span> Hard (11-15)</span>
+            <span class="legend-chip expert"><span class="chip-dot"></span> Expert (16-20)</span>
+          </div>
+        </div>
+
+        <!-- 20 Interactive Level Cards Container -->
+        <div id="home-level-nodes-grid" class="home-level-grid"></div>
+      </section>
+
+      <!-- Features Showcase Section -->
+      <section class="features-section glow-border-card">
+        <h2 class="section-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Game Powers & Mechanics</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <span class="feature-icon">🃏</span>
+            <h3>Wildcard Magic</h3>
+            <p>Wildcards match with ANY card you flip! Turn tricky turns into instant points.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🧊</span>
+            <h3>Time Freeze</h3>
+            <p>Match a freeze pair to stop the countdown timer for 6 seconds!</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">💣</span>
+            <h3>Bomb Traps</h3>
+            <p>Beware! Flipping a bomb deducts score and subtracts 5 seconds from your clock.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🌀</span>
+            <h3>Board Warp Hazard</h3>
+            <p>On Level 15 & 20 Boss battles, unmatched cards automatically swap places!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Home Footer -->
+      <footer class="game-footer">
+        <p>Made with ❤️ for Memory Game Enthusiasts</p>
+      </footer>
+    </div>
+
+
+    <!-- ===================================================================
+         VIEW 2: GAMEPLAY ARENA VIEW
+         =================================================================== -->
+    <div id="game-view" class="view">
+      <!-- Game Top Header Navigation -->
+      <header class="main-header">
+        <button id="back-to-home-btn" class="btn btn-secondary btn-sm" title="Return to Home Landing">
+          <i class="fa-solid fa-house"></i> Home
+        </button>
+
+        <div class="logo-container">
+          <span class="logo-emoji">🧠</span>
+          <div>
+            <h1 class="logo-title">Emoji <span class="gradient-text">Memory</span></h1>
+            <p class="logo-subtitle">Level Arena</p>
+          </div>
+        </div>
+
+        <div class="header-controls">
+          <button id="game-dark-light-toggle" class="btn-icon" title="Toggle Light / Dark Mode">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <button id="game-sound-btn" class="btn-icon" title="Toggle Sound">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+          <button id="game-help-btn" class="btn-icon" title="How to Play">
+            <i class="fa-solid fa-circle-question"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Campaign Progress Bar -->
+      <section class="campaign-bar">
+        <div class="level-badge">
+          <span class="level-label">LEVEL</span>
+          <span id="current-level-num" class="level-number">1</span>
+          <span id="level-tier-badge" class="tier-tag tier-easy">EASY</span>
+        </div>
+
+        <div class="progress-container">
+          <div class="progress-info">
+            <span id="level-title-text">Level 1: Novice Memory</span>
+            <span id="campaign-progress-text">1 / 20 Completed</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="campaign-progress-fill" class="progress-bar-fill" style="width: 5%;"></div>
+          </div>
+        </div>
+
+        <button id="game-map-btn" class="btn btn-secondary btn-sm">
+          <i class="fa-solid fa-map-location-dot"></i> Map
+        </button>
+      </section>
+
+      <!-- Top Dashboard / Stats Bar -->
+      <section class="dashboard">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-stopwatch"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Time</span>
+            <span id="stat-time" class="stat-value">00:00</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-arrows-rotate"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Moves</span>
+            <span id="stat-moves" class="stat-value">0</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-star"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Score</span>
+            <span id="stat-score" class="stat-value">0</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Total Stars</span>
+            <span id="stat-total-stars" class="stat-value">0 / 60</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Controls Bar & Power-Ups -->
+      <section class="controls-bar">
+        <div class="control-group">
+          <label for="game-category-select"><i class="fa-solid fa-layer-group"></i> Card Pack</label>
+          <select id="game-category-select" class="custom-select">
+            <option value="animals">🐶 Animals</option>
+            <option value="food">🍕 Food & Treats</option>
+            <option value="scifi">🚀 Space & Sci-Fi</option>
+            <option value="emotions">🤩 Expressions</option>
+            <option value="sports">⚽ Sports & Fun</option>
+          </select>
+        </div>
+
+        <div class="powerups-group">
+          <button id="powerup-peek" class="btn-powerup" title="Peek all cards for 1.5 seconds">
+            <span class="powerup-icon">👁️</span> Peek
+            <span id="peek-count" class="badge">1</span>
+          </button>
+          <button id="powerup-hint" class="btn-powerup" title="Highlight a matching pair">
+            <span class="powerup-icon">💡</span> Hint
+            <span id="hint-count" class="badge">1</span>
+          </button>
+          <div id="combo-badge" class="combo-badge hidden">
+            🔥 <span id="combo-text">2x Combo!</span>
+          </div>
+          <div id="freeze-indicator" class="freeze-badge hidden">
+            🧊 <span id="freeze-text">FROZEN TIME!</span>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button id="restart-btn" class="btn btn-primary">
+            <i class="fa-solid fa-rotate-right"></i> Retry Level
+          </button>
+        </div>
+      </section>
+
+      <!-- Game Grid Area -->
+      <main class="game-area">
+        <div id="card-grid" class="card-grid"></div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="game-footer">
+        <p>Made with ❤️ for Memory Game Enthusiasts • Antigravity AI Engine</p>
+      </footer>
+    </div>
+
+  </div> <!-- End App Wrapper -->
+
+  <!-- ===================================================================
+       MODAL DIALOGS
+       =================================================================== -->
+  
+  <!-- LEVEL SELECT MAP MODAL -->
+  <div id="level-map-modal" class="modal">
+    <div class="modal-content level-map-card">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-map-location-dot"></i> Select Level (1 - 20)</h2>
+        <button id="close-map-btn" class="btn-icon-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="tier-legend">
+          <span class="legend-item"><span class="dot dot-easy"></span> Easy (1-5)</span>
+          <span class="legend-item"><span class="dot dot-medium"></span> Medium (6-10)</span>
+          <span class="legend-item"><span class="dot dot-hard"></span> Hard (11-15)</span>
+          <span class="legend-item"><span class="dot dot-expert"></span> Expert (16-20)</span>
+        </div>
+        <div id="modal-level-nodes-grid" class="level-nodes-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VICTORY MODAL WITH HOME BUTTON -->
+  <div id="victory-modal" class="modal">
+    <div class="modal-content victory-card glow-border-card">
+      <div class="victory-header">
+        <div class="trophy-bounce">🏆</div>
+        <h2 id="victory-title">Level Cleared!</h2>
+        <p id="victory-subtext" class="victory-subtext">Awesome memory performance!</p>
+      </div>
+
+      <div class="star-rating" id="modal-stars">
+        <i class="fa-solid fa-star star-active"></i>
+        <i class="fa-solid fa-star star-active"></i>
+        <i class="fa-solid fa-star star-active"></i>
+      </div>
+
+      <div class="victory-stats">
+        <div class="v-stat">
+          <span class="v-label">Score</span>
+          <span id="modal-score" class="v-val highlight">1,250</span>
+        </div>
+        <div class="v-stat">
+          <span class="v-label">Time</span>
+          <span id="modal-time" class="v-val">00:45</span>
+        </div>
+        <div class="v-stat">
+          <span class="v-label">Moves</span>
+          <span id="modal-moves" class="v-val">12</span>
+        </div>
+        <div class="v-stat">
+          <span class="v-label">Max Combo</span>
+          <span id="modal-combo" class="v-val">3x</span>
+        </div>
+      </div>
+
+      <!-- Actions including Go To Home Button -->
+      <div class="modal-actions">
+        <button id="next-level-btn" class="btn btn-primary btn-large">
+          <i class="fa-solid fa-forward"></i> Next Level
+        </button>
+        <button id="replay-level-btn" class="btn btn-secondary">
+          <i class="fa-solid fa-rotate-right"></i> Retry
+        </button>
+        <button id="home-from-victory-btn" class="btn btn-secondary">
+          <i class="fa-solid fa-house"></i> Home
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME OVER MODAL WITH HOME BUTTON -->
+  <div id="gameover-modal" class="modal">
+    <div class="modal-content gameover-card glow-border-card">
+      <div class="gameover-header">
+        <div class="skull-bounce">⏰</div>
+        <h2>Time's Up!</h2>
+        <p class="gameover-subtext">Don't give up! Try again to conquer this level.</p>
+      </div>
+
+      <!-- Actions including Go To Home Button -->
+      <div class="modal-actions">
+        <button id="try-again-btn" class="btn btn-primary btn-large">
+          <i class="fa-solid fa-rotate-right"></i> Retry Level
+        </button>
+        <button id="home-from-gameover-btn" class="btn btn-secondary">
+          <i class="fa-solid fa-house"></i> Go to Home
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO PLAY MODAL -->
+  <div id="help-modal" class="modal">
+    <div class="modal-content help-card">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-circle-question"></i> How To Play & Powers</h2>
+        <button id="close-help-btn" class="btn-icon-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <ul class="help-list">
+          <li>
+            <span class="help-icon">🎯</span>
+            <div>
+              <strong>20 Progression Levels:</strong> Conquer levels from Easy (1-5), Medium (6-10), Hard (11-15), up to Level 20 Boss!
+            </div>
+          </li>
+          <li>
+            <span class="help-icon">🃏</span>
+            <div>
+              <strong>Wildcard Card (🃏):</strong> Wildcards match with ANY card you flip alongside it!
+            </div>
+          </li>
+          <li>
+            <span class="help-icon">💣</span>
+            <div>
+              <strong>Trap Bomb Card (💣):</strong> Avoid bombs! Flipping a bomb costs -100 points and -5 seconds.
+            </div>
+          </li>
+          <li>
+            <span class="help-icon">🧊</span>
+            <div>
+              <strong>Freeze Time Card (🧊):</strong> Matching a freeze pair pauses the countdown timer for 6 seconds!
+            </div>
+          </li>
+          <li>
+            <span class="help-icon">🌀</span>
+            <div>
+              <strong>Board Warp Hazard:</strong> On Boss levels (15 & 20), unmatched cards swap places every 15 seconds!
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button id="got-it-btn" class="btn btn-primary">Got it, Let's Play!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Main Game Script -->
+  <script src="script.js"></script>
+</body>
+</html>

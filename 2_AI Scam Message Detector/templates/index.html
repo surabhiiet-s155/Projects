@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Spam Detector</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-dark">
+    <div class="container mt-5">
+        <div class="card p-5 shadow">
+            <h1 class="text-center text-danger">
+                AI Spam Message Detector
+            </h1>
+            <p class="text-center mt-3">
+                Detect scam and fraudulent messages using AI-based keyword analysis.
+            </p>
+            <form action="/check" method="POST">
+                <textarea
+                    name="message"
+                    class="form-control mt-4"
+                    rows="6"
+                    placeholder="Paste your message here..."
+                    required>
+                </textarea>
+                <button class="btn btn-danger mt-4 w-100">
+                    Analyze Message
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
